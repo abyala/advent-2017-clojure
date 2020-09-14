@@ -20,7 +20,7 @@
                      (spiral-coordinates next-loc next-dir next-border))))))
 
 
-(defn abs [n] (if (< n 0) (- n) n))
+(defn abs [n] (if (< n 0) (- n) n))                         ; How is this not in the language?
 (defn manhattan-distance [[x y]] (+ (abs x) (abs y)))
 
 (defn distance-to-access-port [n]
@@ -43,31 +43,3 @@
 
 (defn stress-test [n]
   (first (filter #(> % n) (sum-of-adjacent-seq))))
-
-; Test cases
-(assert (= [3 6] (move-point [3 5] :up)))
-(assert (= [3 4] (move-point [3 5] :down)))
-(assert (= [2 5] (move-point [3 5] :left)))
-(assert (= [4 5] (move-point [3 5] :right)))
-(assert (at-border? [3 5] :up 5))
-(assert (cond at-border? [3 -5] :up 5))
-(assert (cond at-border? [3 5] :down 5))
-(assert (at-border? [3 -5] :down 5))
-(assert (cond at-border? [3 5] :left 3))
-(assert (at-border? [-3 5] :left 3))
-(assert (at-border? [3 5] :right 3))
-(assert (cond at-border? [-3 5] :right 3))
-(assert (= 0 (abs 0)))
-(assert (= 4 (abs 4)))
-(assert (= 4 (abs -4)))
-(assert (= 0 (distance-to-access-port 1)))
-(assert (= 3 (distance-to-access-port 12)))
-(assert (= 2 (distance-to-access-port 23)))
-(assert (= 31 (distance-to-access-port 1024)))
-
-; Actual data
-(assert (= 326 (distance-to-access-port 361527)))
-(assert (= 363010 (stress-test 361527)))
-
-
-
