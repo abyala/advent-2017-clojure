@@ -8,9 +8,8 @@
   [line]
   (let [[change-name change-op change-amount _ check-name check-op check-amount] (str/split line #" ")]
     {:check  {:name check-name, :op (functions check-op), :amount (Integer/parseInt check-amount)}
-     :change {:name change-name, :op (functions change-op), :amount (Integer/parseInt change-amount)}}
-    )
-  )
+     :change {:name change-name, :op (functions change-op), :amount (Integer/parseInt change-amount)}}))
+
 (defn apply-calculation-to-register "Applies a calculation {:name, :op, :amount} to the current registers"
   [calculation registers]
   ((:op calculation) (or (registers (:name calculation)) 0) (:amount calculation)))

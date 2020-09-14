@@ -8,10 +8,7 @@
       steps
       (recur (+ pos (m pos))
              (assoc m pos (replace-fun (m pos)))
-             (inc steps))
-      )
-    )
-  )
+             (inc steps)))))
 
 (defn simple-maze-walk [maze] (escape-from-maze maze inc))
 (defn complex-maze-walk [maze] (escape-from-maze maze #(if (>= % 3) (dec %) (inc %))))

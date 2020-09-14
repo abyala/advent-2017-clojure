@@ -8,8 +8,7 @@
                                                          (count word))))
                                        (Character/getNumericValue c)
                                        0))
-                         word))
-  )
+                         word)))
 
 (def count-adjacent-characters "Part 1: Compares characters adjacent to each other"
   (partial count-equal-across-offset 1))                    ; Fun with currying!

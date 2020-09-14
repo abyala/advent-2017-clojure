@@ -10,8 +10,7 @@
                  (map-indexed (fn [idx val] [idx val]) banks)))))
 
 (defn next-wrapped [vec current]
-  (if (= (inc current) (count vec)) 0 (inc current))
-  )
+  (if (= (inc current) (count vec)) 0 (inc current)))
 
 (defn reallocate-banks [banks]
   (let [index (first-index-of-largest banks)]
@@ -33,10 +32,8 @@
       { :num-reallocations cycles, :loop-size (- cycles (history b))}
       (recur (reallocate-banks b)
              (merge history {b cycles})
-             (inc cycles))
-      )
-    )
-  )
+             (inc cycles)))))
+
 (defn num-reallocations-until-loop [banks] (:num-reallocations (get-first-cycle banks)))
 (defn loop-size [banks] (:loop-size (get-first-cycle banks)))
 

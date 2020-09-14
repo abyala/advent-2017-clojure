@@ -12,7 +12,7 @@
 (defn parse-group
   "Parses a subset of a string of a group, AFTER the leading '{'.  Returns {:score, :garbage, :remaining-text}"
   [text score]
-  (loop [[x & xs] text, total-score score, total-garbage 0] ; kill children and garbage
+  (loop [[x & xs] text, total-score score, total-garbage 0]
     (case x
       \{ (let [{child-score :score, child-garbage :garbage, rem :remaining-text} (parse-group xs (inc score))]
            (recur rem (+ total-score child-score) (+ total-garbage child-garbage)))

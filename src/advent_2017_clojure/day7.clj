@@ -32,12 +32,7 @@
             (- target-weight sum-of-children)
             )
           (recur (merge orphans {(:name parent) (assoc parent :total-weight (+ (:weight parent) (reduce + child-weights)))})
-                 (remove #{parent} parents))
-          )
-        )
-      )
-    )
-  )
+                 (remove #{parent} parents)))))))
 
 ; Test cases
 

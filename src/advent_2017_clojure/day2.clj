@@ -18,16 +18,13 @@
       result
       (recur (concat result
                      (map #(vector x %) xs))
-             xs))
-    )
-  )
+             xs))))
 
 (defn divide-first-evenly "Divides the first (only?) pair of integers that are evenly divisible"
   [nums]
   (first (keep (fn [[den num]]
                  (when (= 0 (rem num den)) (/ num den)))
-               (unique-pairs nums)))
-  )
+               (unique-pairs nums))))
 
 ; Checksum functions
 (defn apply-checksum [fn doc]                               ; Same logic, different mapping function
