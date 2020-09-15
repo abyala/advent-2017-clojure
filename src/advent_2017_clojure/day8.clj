@@ -4,11 +4,15 @@
 (def functions "Map of string functions from input into actual Clojure functions"
   {">" >, ">=" >=, "<" <, "<=" <=, "==" =, "!=" not=, "inc" +, "dec" -})
 
-(defn parse-as-calculation "Returns a map of :check and :change to calculations to apply to the register"
+(defn create-calculation "Returns a single calculation map from its string components"
+  [[name op amount]]
+  {:name name, :op (functions op) :amount (Integer/parseInt amount)})
+
+(defn parse-line "Returns a map of :check and :change to calculations to apply to the register"
   [line]
-  (let [[change-name change-op change-amount _ check-name check-op check-amount] (str/split line #" ")]
-    {:check  {:name check-name, :op (functions check-op), :amount (Integer/parseInt check-amount)}
-     :change {:name change-name, :op (functions change-op), :amount (Integer/parseInt change-amount)}}))
+  (let [splits (str/split line #" ")]
+    {:change (create-calculation (take 3 splits))
+     :check (create-calculation (drop 4 splits))}))
 
 (defn apply-calculation-to-register "Applies a calculation {:name, :op, :amount} to the current registers"
   [calculation registers]
@@ -19,7 +23,7 @@
   (loop [[x & xs] instructions, registers {}, largest 0]
     (if (nil? x)
       {:registers registers, :max largest}
-      (let [{check :check, change :change} (parse-as-calculation x),
+      (let [{check :check, change :change} (parse-line x),
             [next-registers next-largest] (if (apply-calculation-to-register check registers)
                                             (let [new-mapping (apply-calculation-to-register change registers)]
                                               [(assoc registers (:name change) new-mapping), (max largest new-mapping)])
@@ -27,8 +31,8 @@
         (recur xs next-registers next-largest)))))
 
 (defn max-register-at-the-end [instructions]
-  (reduce max (map #(second %)
-                   (:registers (apply-register-instructions instructions)))))
+  (reduce max (map second (:registers (apply-register-instructions instructions)))))
+
 (defn max-register-ever [instructions]
   (:max (apply-register-instructions instructions)))
 
