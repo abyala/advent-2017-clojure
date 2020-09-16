@@ -19,3 +19,21 @@
   (testing "Puzzle input"
     (is (= 38628 (part1 256 PUZZLE_INTEGERS)))))
 
+(deftest string-to-ascii-test
+  (testing "Unformatted data"
+    (is (= '(49,44,50,44,51) (string-to-ascii "1,2,3"))))
+  (testing "Formatted data"
+    (is (= '(49 44 50 44 51 17 31 73 47 23) (string-to-formatted-ascii "1,2,3")))))
+
+(deftest to-hex-text
+  (testing "Sample text"
+    (is (= "4007ff") (to-hex [64 7 255]))))
+
+(deftest part2-tests
+  (testing "Sample inputs"
+    (is (= "a2582a3a0e66e6e86e3812dcb672a272" (part2 "")))
+    (is (= "33efeb34ea91902bb2f59c9920caa6cd" (part2 "AoC 2017")))
+    (is (= "3efbe78a8d82f29979031a4aa0b16a9d" (part2 "1,2,3")))
+    (is (= "63960835bcdc130f0b66d7ff4f6a5a8e" (part2 "1,2,4"))))
+  (testing "Puzzle input"
+    (is (= "e1462100a34221a7f0906da15c1c979a" (part2 PUZZLE_INPUT)))))
