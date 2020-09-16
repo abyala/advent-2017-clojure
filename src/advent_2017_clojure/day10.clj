@@ -8,20 +8,12 @@
       (let [a (mod low (count ary)), b (mod high (count ary))]
         (recur (assoc loop-ary a (loop-ary b) b (loop-ary a)) (inc low) (dec high))))))
 
-(defn apply-lines-to-ring "Applies all length substitutions to a ring"
-  [ring, lines]
-  (loop [array (:data ring), pos (:position ring), skip (:skip-size ring), [x & xs] lines]
-    (if (nil? x)
-      {:data array, :position pos, :skip-size skip}
-      (recur (reverse-sub-array array pos x) (+ pos x skip) (inc skip) xs))))
-
 (defn process-ring "Applies the length substitution \"times\" times to a ring of \"size\" size."
   [size times lines]
-  (loop [ring {:data (vec (range size)), :position 0, :skip-size 0},
-         times-remaining times]
-    (if (= times-remaining 0)
-      (:data ring)
-      (recur (apply-lines-to-ring ring lines) (dec times-remaining)))))
+  (loop [array (vec (range size)), pos 0, skip 0, [x & xs] (flatten (repeat times lines))]
+    (if (nil? x)
+      array
+      (recur (reverse-sub-array array pos x) (+ pos x skip) (inc skip) xs))))
 
 (defn string-to-ascii "Converts each character in a String to ASCII"
   [word]
