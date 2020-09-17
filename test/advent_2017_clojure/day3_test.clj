@@ -1,6 +1,7 @@
 (ns advent-2017-clojure.day3-test
   (:require [clojure.test :refer :all]
-            [advent-2017-clojure.day3 :refer :all]))
+            [advent-2017-clojure.day3 :refer :all]
+            [advent-2017-clojure.utils :refer [abs]]))
 
 (deftest move-point-tests
   (is (= [3 6] (move-point [3 5] :up)))

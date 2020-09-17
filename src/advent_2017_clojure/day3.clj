@@ -1,4 +1,5 @@
-(ns advent-2017-clojure.day3)
+(ns advent-2017-clojure.day3
+  (:require [advent-2017-clojure.utils :refer [abs]]))
 
 (defn move-point [[x y], dir]
   (case dir :up [x (inc y)], :down [x (dec y)], :left [(dec x) y], :right [(inc x) y]))
@@ -19,8 +20,6 @@
      (lazy-seq (cons last-loc
                      (spiral-coordinates next-loc next-dir next-border))))))
 
-
-(defn abs [n] (if (< n 0) (- n) n))                         ; How is this not in the language?
 (defn manhattan-distance [[x y]] (+ (abs x) (abs y)))
 
 (defn distance-to-access-port [n]
