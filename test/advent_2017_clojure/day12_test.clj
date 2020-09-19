@@ -13,3 +13,7 @@
 (deftest test-part1
   (is (= 6 (part1 TEST_TEXT)))
   (is (= 115 (part1 PUZZLE_TEXT))))
+
+(deftest test-part2
+  (is (= 2 (part2 TEST_TEXT)))
+  (is (= 221 (part2 PUZZLE_TEXT))))
