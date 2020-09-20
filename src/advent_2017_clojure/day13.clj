@@ -14,29 +14,27 @@
 (defn largest-depth [board]
   (reduce max (keys board)))
 
-(defn move-layer [{range :range, pos :pos, dir :dir}]
-  (let [next-pos (+ pos (case dir :up -1 :down 1))
-        next-dir (cond (and (= dir :up) (= next-pos 0)) :down
-                       (and (= dir :down) (= (inc next-pos) range)) :up
-                       :else dir)]
-    {:range range, :pos next-pos, :dir next-dir}))
+(defn intersects-at-step [range step]
+  (and (some? range)
+       (= 0 (rem step
+                 (* 2 (dec range))))))
 
-(defn move-board [board]
-  (into {} (map (fn [[k v]] [k (move-layer v)]) board)))
+(defn matches-during-walk [board initial-delay]
+  (filter #(intersects-at-step (:range (board %)) (+ initial-delay %))
+          (range (inc (largest-depth board)))))
 
-(defn walk-through-firewall [board]
-  (let [max-depth (largest-depth board)]
-    (loop [layers-caught #{}, current-board board, current-depth 0]
-      (if (> current-depth max-depth)
-        layers-caught
-        (recur (if (= 0 (:pos (current-board current-depth)))
-                 (conj layers-caught current-depth)
-                 layers-caught)
-               (move-board current-board)
-               (inc current-depth))))))
-
-(defn severity-of-firewalk [board]
+(defn new-severity [board]
   (reduce + (map #(* % (:range (board %)))
-                 (walk-through-firewall board))))
+                 (matches-during-walk board 0))))
+
+(defn new-avoids-detection [board initial-delay]
+  (empty? (matches-during-walk board initial-delay)))
+
+(defn delay-to-avoid-detection [board]
+  (first (filter #(new-avoids-detection board %) (range))))
+
 (defn part1 [input-text]
-  (severity-of-firewalk (create-board input-text)))
+  (new-severity (create-board input-text)))
+
+(defn part2 [input-text]
+  (delay-to-avoid-detection (create-board input-text)))

@@ -11,8 +11,14 @@
 
 (deftest test-severity
   (testing "Sample input"
-    (is (= 24 (part1 TEST_TEXT)))
-    )
+    (is (= 24 (part1 TEST_TEXT))))
   (testing "Puzzle input"
-    (is (= 1580 (part1 PUZZLE_TEXT))))
-  )
+    (is (= 1580 (part1 PUZZLE_TEXT)))))
+
+(println (part2 PUZZLE_TEXT))
+
+(deftest test-avoids-detection
+  (testing "Sample input"
+    (is (= 10 (part2 TEST_TEXT))))
+  (testing "Puzzle input"
+    (is (= 3943252 (part2 PUZZLE_TEXT)))))
