@@ -23,18 +23,19 @@
   (filter #(intersects-at-step (:range (board %)) (+ initial-delay %))
           (range (inc (largest-depth board)))))
 
-(defn new-severity [board]
+(defn severity [board]
   (reduce + (map #(* % (:range (board %)))
                  (matches-during-walk board 0))))
 
-(defn new-avoids-detection [board initial-delay]
+(defn avoids-detection [board initial-delay]
   (empty? (matches-during-walk board initial-delay)))
 
+; There's definitely some clever solution here using LCM, but let's go with clarity instead.
 (defn delay-to-avoid-detection [board]
-  (first (filter #(new-avoids-detection board %) (range))))
+  (first (filter #(avoids-detection board %) (range))))
 
 (defn part1 [input-text]
-  (new-severity (create-board input-text)))
+  (severity (create-board input-text)))
 
 (defn part2 [input-text]
   (delay-to-avoid-detection (create-board input-text)))
