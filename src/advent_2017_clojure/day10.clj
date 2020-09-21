@@ -40,5 +40,5 @@
         ring (process-ring 256 64 ascii-codes)]
     (to-dense-hash ring)))
 
-
+(def apply-knot-hash part2)
 
