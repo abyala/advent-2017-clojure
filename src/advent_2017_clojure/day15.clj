@@ -1,5 +1,4 @@
-(ns advent-2017-clojure.day15
-  (:require [advent-2017-clojure.utils :refer [left-pad]]))
+(ns advent-2017-clojure.day15)
 
 (def generator-a-factor 16807)
 (def generator-b-factor 48271)
