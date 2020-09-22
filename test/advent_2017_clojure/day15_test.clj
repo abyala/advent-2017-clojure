@@ -10,3 +10,9 @@
     (is (= 588 (part1 (first TEST_SEEDS) (second TEST_SEEDS)))))
   (testing "Puzzle input"
     (is (= 609 (part1 (first PUZZLE_INPUT) (second PUZZLE_INPUT))))))
+
+(deftest part2-test
+  (testing "Test input"
+    (is (= 309 (part2 (first TEST_SEEDS) (second TEST_SEEDS)))))
+  (testing "Puzzle input"
+    (is (= 253 (part2 (first PUZZLE_INPUT) (second PUZZLE_INPUT))))))
