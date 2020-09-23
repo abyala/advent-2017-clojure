@@ -11,8 +11,6 @@
   (testing "Puzzle input"
     (is (= "namdgkbhifpceloj" (part1 PUZZLE_INPUT 16)))))
 
-#_(deftest part2-test
-  (testing "Test input"
-    (is (= 309 12)))
+(deftest part2-test
   (testing "Puzzle input"
-    (is (= 253 51))))
+    (is (= "ibmchklnofjpdeag" (part2 PUZZLE_INPUT 16)))))

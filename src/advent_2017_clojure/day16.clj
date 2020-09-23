@@ -1,6 +1,8 @@
 (ns advent-2017-clojure.day16
-  (:require [clojure.string :as str]))
+  (:require [clojure.string :as str]
+            [advent-2017-clojure.utils :refer [split-commas]]))
 
+(def one-billion 1000000000)
 
 (defn spin [n dancers]
   (let [pivot (- (count dancers) n)]
@@ -23,16 +25,25 @@
          (partial partner (first a) (first b)))))
 
 (defn parse-input [input-str]
-  (let [commands (str/split input-str #",")]
+  (let [commands (split-commas input-str)]
     (lazy-seq (cons (parse-command (first commands)) (parse-input (rest commands))))))
 
-(defn alphabet-vec [size] (vec (map #(char (+ 97 %)) (range size))))
+(defn alphabet [size] (apply str (map #(char (+ (int \a) %)) (range size))))
+(defn alphabet-vec [size] (vec (alphabet size)))
+
+(defn dance [steps dancers]
+  (apply str (reduce #((parse-command %2) %1)
+                     dancers
+                     (str/split steps #","))))
 
 (defn part1 [input-str size]
-  (apply str (reduce #((parse-command %2) %1)
-                     (alphabet-vec size)
-                     (str/split input-str #","))))
+  (dance input-str (alphabet-vec size)))
 
-;; ;;;;;;;;
-;; NOTE: After seeing part two, consider changing the dance steps into defs instead of defns.
-
+(defn part2 [input-str size]
+  (let [starting-position (alphabet size)]
+    (loop [c 0, dancers starting-position, positions {}]
+      (cond
+        (= c one-billion) dancers
+        (contains? positions dancers)
+        (first (keep (fn [[pos idx]] (if (= idx (mod one-billion c)) pos)) positions))
+        :else (recur (inc c) (dance input-str (vec dancers)) (assoc positions dancers c))))))
