@@ -40,10 +40,9 @@
   (dance input-str (alphabet-vec size)))
 
 (defn part2 [input-str size]
-  (let [starting-position (alphabet size)]
-    (loop [c 0, dancers starting-position, positions {}]
-      (cond
-        (= c one-billion) dancers
-        (contains? positions dancers)
-        (first (keep (fn [[pos idx]] (if (= idx (mod one-billion c)) pos)) positions))
-        :else (recur (inc c) (dance input-str (vec dancers)) (assoc positions dancers c))))))
+  (loop [c 0, dancers (alphabet size), positions {}]
+    (cond
+      (= c one-billion) dancers
+      (contains? positions dancers)
+      (first (keep (fn [[pos idx]] (if (= idx (mod one-billion c)) pos)) positions))
+      :else (recur (inc c) (dance input-str (vec dancers)) (assoc positions dancers c)))))
