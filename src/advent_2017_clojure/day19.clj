@@ -8,7 +8,7 @@
 
 (defn start-of-maze [maze]
   (ffirst (filter (fn [[[_ y] _]] (= y 0))
-                 maze)))
+                  maze)))
 
 (defn adjacent-point [[x y] dir]
   (case dir
@@ -18,9 +18,8 @@
     :right [(inc x) y]))
 
 (defn turning-points [point dir]
-  (map #(vector (adjacent-point point %) %) (if (contains? #{:up :down} dir)
-                                         '(:left :right)
-                                         '(:up :down))))
+  (map #(vector (adjacent-point point %) %)
+       (if (contains? #{:up :down} dir) '(:left :right) '(:up :down))))
 
 (defn move [point dir maze]
   (let [next (adjacent-point point dir)]
@@ -29,21 +28,20 @@
       [next (first (keep #(when (contains? maze (first %)) (second %))
                          (turning-points next dir)))])))
 
-
 (defn is-letter? [c]
   (let [i (int c)]
     (and (>= i (int \A)) (<= i (int \Z)))))
 
 (defn path-through-maze [maze]
-  (loop [found [], loc (start-of-maze maze), dir :down]
-    ;(println "Looped, now at loc" loc "and direction" dir)
-    (let [val (maze loc) ]
+  (loop [found [] steps 0, loc (start-of-maze maze), dir :down]
+    (let [val (maze loc)]
       (if (nil? val)
-        ;(println "We're at the end! Found=" found)
-        (apply str found)
+        {:path (apply str found) :steps steps}
         (let [[next-loc next-dir] (move loc dir maze)]
           (recur (if (is-letter? val) (conj found val) found)
+                 (inc steps)
                  next-loc
                  next-dir))))))
 
-(defn part1 [input] (path-through-maze (create-maze input)))
+(defn part1 [input] ((path-through-maze (create-maze input)) :path))
+(defn part2 [input] ((path-through-maze (create-maze input)) :steps))
