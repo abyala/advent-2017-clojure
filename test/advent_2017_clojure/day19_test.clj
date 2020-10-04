@@ -2,6 +2,7 @@
   (:require [clojure.test :refer :all]
             [advent-2017-clojure.day19 :refer :all]))
 
+
 (def TEST_INPUT "    | \n    |  +--+\n    A  |  C\nF---|----E|--+\n    |  |  |  D\n    +B-+  +--+")
 (def PUZZLE_INPUT (slurp "test\\advent_2017_clojure\\day19_data.clj"))
 
