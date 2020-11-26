@@ -15,24 +15,34 @@
 
 (deftest parse-input-test
   (is (= {:carrier         [1 1]
-          :direction      :up
-          :infected        #{[2 0] [0 1]}
+          :direction       :up
+          :unclean         {[2 0] :infected, [0 1] :infected}
           :infection-count 0}
          (parse-input TEST_INPUT))))
 
-(deftest infect-or-clean-test
-  (is (= {:carrier [3 3] :infected #{[1 1] [2 2] [3 3]} :infection-count 6}
-         (infect-or-clean {:carrier [3 3] :infected #{[1 1] [2 2]} :infection-count 5})))
-  (is (= {:carrier [1 1] :infected #{[2 2]} :infection-count 5}
-         (infect-or-clean {:carrier [1 1] :infected #{[1 1] [2 2]} :infection-count 5}))))
+(deftest affect-carrier-node-test
+  (is (= {:carrier [3 3] :unclean {[1 1] :infected [2 2] :infected [3 3] :infected}
+          :infection-count 6}
+         (affect-carrier-node :infected
+                              {:carrier         [3 3]
+                               :unclean         {[1 1] :infected
+                                                 [2 2] :infected}
+                               :infection-count 5})))
+  (is (= {:carrier [1 1] :unclean {[2 2] :infected}
+          :infection-count 5}
+         (affect-carrier-node nil
+                              {:carrier         [1 1]
+                               :unclean         {[1 1] :infected
+                                                 [2 2] :infected}
+                               :infection-count 5}))))
 
 (deftest turn-carrier-test
   (is (= :left
-         (:direction (turn-carrier {:carrier [0 0] :direction :up :infected #{[1 1]} :infection-count 2}))))
+         (:direction (turn-carrier {:carrier [0 0] :direction :up :unclean {[1 1] :infected} :infection-count 2}))))
   (is (= :right
-         (:direction (turn-carrier {:carrier [1 1] :direction :up :infected #{[1 1]} :infection-count 2}))))
+         (:direction (turn-carrier {:carrier [1 1] :direction :up :unclean {[1 1] :infected} :infection-count 2}))))
   (is (= :up
-         (:direction (turn-carrier {:carrier [1 1] :direction :left :infected #{[1 1]} :infection-count 2})))))
+         (:direction (turn-carrier {:carrier [1 1] :direction :left :unclean {[1 1] :infected} :infection-count 2})))))
 
 (deftest move-carrier-test
   (is (= [3 4]
@@ -44,3 +54,18 @@
   (is (= 41 (part1 TEST_INPUT 70)))
   (is (= 5587 (part1 TEST_INPUT 10000)))
   (is (= 5339 (part1 PUZZLE_INPUT 10000))))
+
+(deftest simple-virus-impact-test
+  (is (= :infected (simple-virus-impact nil)))
+  (is (nil? (simple-virus-impact :infected))))
+
+(deftest complex-virus-impact-test
+  (is (= :weakened (complex-virus-impact nil)))
+  (is (= :infected (complex-virus-impact :weakened)))
+  (is (= :flagged (complex-virus-impact :infected)))
+  (is (nil? (complex-virus-impact :flagged))))
+
+(deftest part2-test
+  (is (= 26 (part2 TEST_INPUT 100)))
+  (is (= 2511944 (part2 TEST_INPUT 10000000)))
+  (is (= 2512380 (part2 PUZZLE_INPUT 10000000))))

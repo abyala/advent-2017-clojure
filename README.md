@@ -21,4 +21,18 @@ _I'm only starting this after returning from AoC 2016, since I didn't record my 
   * I thought about a generic way to rotate a grid such that it would scale beyond 2 or 3, but I couldn't find one that
   wasn't going to be too complex. So instead, I played around with multi-methods (`defmulti` and `defmethod`) instead.
   A simple `case` sufficed for the original implementation, but this was a fun experiment that looks decent enough.
+
+* Day 22
+  * Nothing very difficult here, so I decided to focus on readability by adding more smaller functions, like
+  `status-at-carrier` and even `move`.
+  * So many AoC problems are path finding, and I always take forever to decide how to handle directions. When this
+  inevitably shows up in future years, I'll have to make a break-out namespace to simplify it. But the `direction-map`
+  seemed to cover what I needed - turning and moving.
+  * I've been focusing on my input destructuring, including the use of `:as` to both destructure a function argument
+  _and_ leave it intact.
+  * Going back to decomposition, I'm really happy with the level of granularity in both the `run-burst` and `solve`
+  functions. Part of my learning Clojure is to focus on functional programming, and I enjoyed working with `run-burst`
+  in the REPL.
+  * The fun part of AoC for me is refactoring each part 1 to support part 2 with minimal code duplication, and I feel
+  like the definition of the virus algorithm as the single aspect that differentiates `part1` from `part2` is clean.   
   
