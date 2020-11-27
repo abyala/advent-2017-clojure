@@ -10,6 +10,16 @@ days 18 and 20 to finish those missing stars. Hopefully I've improved!
 
 _I'm only starting this after returning from AoC 2016, since I didn't record my little diary the first time around._
 
+* Day 18
+  * This problem was a killer to be flexible, and was the main reason why I gave up on 2017 until I finished 2016.
+  * What I love about the solution is the fact that the program externalizes its instruction set into the `action-map`,
+  since `part1` and `part2` wanted the `rcv` instruction to do two different things.
+  * I also love how the action map leverages `state-changer`, `mover`, and `side-effect` as composable functions that
+  the `take-action` function can reuse. I suppose I could also use namespaced-keywords to abstract away the
+  implementation logic of `take-action` from the caller.
+  * I think this was also my first use of `core.async` in a real problem. The program does not execute both threads in
+  parallel, because detecting deadlock would be tricky. But I got to use `<!!`, `>!!`, and `poll!`.
+
 * Day 21
   * I had to do this a few times, because I couldn't decide if I wanted to represent the grid as one big string, or as
   sequences of strings. I eventually opted for the latter.
