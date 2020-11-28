@@ -3,7 +3,7 @@
             [advent-2017-clojure.duet :as d]
             [clojure.string :as str]))
 
-(def part1-action-map {"snd" [d/state-changer d/send-message]
+(def part1-action-map {"snd" [d/side-effect d/send-message]
                        "set" [d/state-changer d/set-register]
                        "add" [d/state-changer d/add-register]
                        "mul" [d/state-changer d/multiply-register]
@@ -11,16 +11,10 @@
                        "rcv" [d/state-changer d/recover-frequency]
                        "jgz" [d/mover d/jump-from-non-zero]})
 
-(def increment-counter
-  (fn [name duet]
-    (when-let [atom (name duet)]
-      (swap! atom inc))
-    duet))
-
 (def part2-action-map
   (merge part1-action-map
          {"rcv" [d/state-changer d/receive-frequency]
-          "snd" [d/state-changer (comp (partial increment-counter :send-counter)
+          "snd" [d/state-changer (comp (partial d/increment-counter :send-counter)
                                        d/send-message)]}))
 
 (defn parse-instructions [input]

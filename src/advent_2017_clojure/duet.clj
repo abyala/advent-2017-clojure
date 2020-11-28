@@ -2,11 +2,11 @@
   (:require [clojure.core.async :refer [chan >!! <!! poll! sliding-buffer]]
             [clojure.string :as str]))
 
-(defstruct Duet :registers :pos :blocked :inbox :outbox :recovered :num-sent)
+(defstruct Duet :registers :pos :blocked :inbox :outbox :recovered)
 
 (defn new-duet
   ([] (let [c (chan (sliding-buffer 1024))] (new-duet c c)))
-  ([inbox outbox] (struct Duet {} 0 false inbox outbox nil 0)))
+  ([inbox outbox] (struct Duet {} 0 false inbox outbox nil)))
 
 (defmulti reg-value (fn [_ x] (type x)))
 (defmethod reg-value String [duet x]
@@ -30,7 +30,7 @@
 
 (defn send-message [{outbox :outbox :as duet} x & _]
   (>!! outbox (reg-value duet x))
-  (update duet :num-sent inc))
+  duet)
 
 (defn recover-frequency [{inbox :inbox :as duet} x & _]
   (when (not= 0 (reg-value duet x))
@@ -60,6 +60,12 @@
 (defn side-effect [f duet x y]
   (f duet x y)
   nil)
+
+(def increment-counter
+  (fn [name duet]
+    (when-let [atom (name duet)]
+      (swap! atom inc))
+    duet))
 
 (defn take-action [action-map instructions {pos :pos :as duet}]
   (if (< -1 pos (count instructions))
