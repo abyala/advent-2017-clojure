@@ -48,4 +48,12 @@ _I'm only starting this after returning from AoC 2016, since I didn't record my 
   in the REPL.
   * The fun part of AoC for me is refactoring each part 1 to support part 2 with minimal code duplication, and I feel
   like the definition of the virus algorithm as the single aspect that differentiates `part1` from `part2` is clean.   
-  
+
+* Day 23
+  * Sorry, Eric, but my goal isn't to figure out the brain-teaser part of these challenges. I read online what the
+  magic secret was to part #2, and then I implemented it in Clojure. I've learned by now that there are always 1 or 2
+  problems that depend on _not_ coding and instead interpretting the data set, and I'm not game.
+  * That said, part 1 was fun in that I got a ton of reuse from Day 18.  If I see this again in another day's problem,
+  I might extend this further; perhaps each value in the action-map can support an optional filter, such that
+  `jnz` and `jgz` could both use a common function, but with an optional filter to decide if the branch should be taken.
+  That could also work with some of the earlier channel work.
