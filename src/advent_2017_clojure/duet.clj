@@ -8,6 +8,10 @@
   ([] (let [c (chan (sliding-buffer 1024))] (new-duet c c)))
   ([inbox outbox] (struct Duet {} 0 false inbox outbox nil)))
 
+(defn blocked? [duet] (true? (:blocked duet)))
+(defn block [duet] (assoc duet :blocked true))
+(defn unblock [duet] (assoc duet :blocked false))
+
 (defmulti reg-value (fn [_ x] (type x)))
 (defmethod reg-value String [duet x]
   (or (get-in duet [:registers x]) 0))
@@ -21,6 +25,9 @@
 
 (defn add-register [duet x y]
   (apply-fn-to-registers duet + x y))
+
+(defn subtract-register [duet x y]
+  (apply-fn-to-registers duet - x y))
 
 (defn multiply-register [duet x y]
   (apply-fn-to-registers duet * x y))
@@ -39,17 +46,21 @@
 (defn receive-frequency [{inbox :inbox :as duet} x & _]
   (if-let [v (poll! inbox)]
     (set-register duet x v)
-    (assoc duet :blocked true)))
+    (block duet)))
 
 (defn recover-frequency [{inbox :inbox :as duet} x & _]
   (when (not= 0 (reg-value duet x))
     (let [v (poll! inbox)]
       (if (some? v)
         (assoc duet :recovered v)
-        (assoc duet :blocked true)))))
+        (block duet)))))
 
-(defn jump-from-non-zero [duet x y]
+(defn jump-from-greater-than-zero [duet x y]
   (when (pos? (reg-value duet x)) (reg-value duet y)))
+
+(defn jump-from-not-zero [duet x y]
+  (when (not= 0 (reg-value duet x)) (reg-value duet y)))
+
 (defn state-changer [f duet x y]
   (when-some [d (f duet x y)]
     {:duet d}))
@@ -71,12 +82,12 @@
   (if (< -1 pos (count instructions))
     (let [[cmd x y] (instructions pos)
           [action-class action] (action-map cmd)
-          unblocked-duet (assoc duet :blocked nil)
+          unblocked-duet (unblock duet)
           result (action-class action unblocked-duet x y)
           {next-duet :duet move-by :move} (into {:duet unblocked-duet :move 1} result)
           next-pos (if (:blocked next-duet) pos (+ pos move-by))]
       (assoc next-duet :pos next-pos))
-    (assoc duet :blocked true)))
+    (block duet)))
 
 (defn parse-instruction [line]
   (->> (str/split line #" ")
@@ -88,6 +99,8 @@
    (let [c (chan (sliding-buffer 1024))]
      (run-duet actions instructions c c)))
   ([actions instructions inbox outbox]
+   (run-duet actions instructions (new-duet inbox outbox)))
+  ([actions instructions duet]
    (let [parsed-instructions (mapv parse-instruction (str/split-lines instructions))]
-     (->> (new-duet inbox outbox)
+     (->> duet
           (iterate (partial take-action actions parsed-instructions))))))

@@ -9,7 +9,7 @@
                        "mul" [d/state-changer d/multiply-register]
                        "mod" [d/state-changer d/mod-register]
                        "rcv" [d/state-changer d/recover-frequency]
-                       "jgz" [d/mover d/jump-from-non-zero]})
+                       "jgz" [d/mover d/jump-from-greater-than-zero]})
 
 (def part2-action-map
   (merge part1-action-map
@@ -39,6 +39,6 @@
         instructions (parse-instructions input)]
     (->> [d1 d2]
          (iterate (fn [d] (doall (map #(d/take-action actions instructions %) d))))
-         (keep #(when (every? (partial :blocked) %)
+         (keep #(when (every? d/blocked? %)
                   (-> (second %) :send-counter deref)))
          first)))
