@@ -19,6 +19,9 @@ _I'm only starting this after returning from AoC 2016, since I didn't record my 
   implementation logic of `take-action` from the caller.
   * I think this was also my first use of `core.async` in a real problem. The program does not execute both threads in
   parallel, because detecting deadlock would be tricky. But I got to use `<!!`, `>!!`, and `poll!`.
+  * To get around the `StackOverflowError` that plagued me in part 2, I had to call `doall` around the `map` function,
+  since it did a lot of calculations, and that overloaded the lazy map.  Given the use case, there really was no need
+  for lazy evaluation, and evaluating it didn't have any negative impacts. 
 
 * Day 21
   * I had to do this a few times, because I couldn't decide if I wanted to represent the grid as one big string, or as

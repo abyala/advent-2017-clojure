@@ -1,11 +1,11 @@
 (ns advent-2017-clojure.duet
-  (:require [clojure.core.async :refer [chan >!! <!! poll!]]
+  (:require [clojure.core.async :refer [chan >!! <!! poll! sliding-buffer]]
             [clojure.string :as str]))
 
 (defstruct Duet :registers :pos :blocked :inbox :outbox :recovered :num-sent)
 
 (defn new-duet
-  ([] (let [c (chan)] (new-duet c c)))
+  ([] (let [c (chan (sliding-buffer 1024))] (new-duet c c)))
   ([inbox outbox] (struct Duet {} 0 false inbox outbox nil 0)))
 
 (defmulti reg-value (fn [_ x] (type x)))
@@ -28,7 +28,7 @@
 (defn mod-register [duet x y]
   (apply-fn-to-registers duet mod x y))
 
-(defn play-sound [{outbox :outbox :as duet} x & _]
+(defn send-message [{outbox :outbox :as duet} x & _]
   (>!! outbox (reg-value duet x))
   (update duet :num-sent inc))
 
@@ -76,3 +76,12 @@
   (->> (str/split line #" ")
        (mapv #(try (Long/parseLong %)
                    (catch NumberFormatException _ %)))))
+
+(defn run-duet
+  ([actions instructions]
+   (let [c (chan (sliding-buffer 1024))]
+     (run-duet actions instructions c c)))
+  ([actions instructions inbox outbox]
+   (let [parsed-instructions (mapv parse-instruction (str/split-lines instructions))]
+     (->> (new-duet inbox outbox)
+          (iterate (partial take-action actions parsed-instructions))))))

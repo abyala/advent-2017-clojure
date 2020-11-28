@@ -49,15 +49,15 @@
           d (-> (new-duet c c)
                 (set-register "a" 3)
                 (set-register "b" 4))]
-      (play-sound d "a")
+      (send-message d "a")
       (is (= 3 (<!! c)))))
   (testing "Only keep last sound playe4d"
     (let [c (chan (sliding-buffer 1))
           d (-> (new-duet c c)
                 (set-register "a" 3)
                 (set-register "b" 4))]
-      (play-sound d "a")
-      (play-sound d "b")
+      (send-message d "a")
+      (send-message d "b")
       (is (= 4 (<!! c))))))
 
 (deftest recover-frequency-test
@@ -65,7 +65,7 @@
     (let [c (chan (sliding-buffer 1))
           d (-> (new-duet c c)
                 (set-register "a" 3))]
-      (play-sound d "a")
+      (send-message d "a")
       (is (= 3
              (:recovered (recover-frequency d "a"))))))
   (testing "Last was zero"
@@ -73,15 +73,15 @@
           d (-> (new-duet c c)
                 (set-register "a" 0)
                 (set-register "b" 1))]
-      (play-sound d "b")
+      (send-message d "b")
       (is (nil? (:recovered (recover-frequency d "a"))))))
   (testing "Overwrite value"
     (let [c (chan (sliding-buffer 1))
           d (-> (new-duet c c)
                 (set-register "a" 3)
                 (set-register "b" 4))]
-      (play-sound d "a")
-      (play-sound d "b")
+      (send-message d "a")
+      (send-message d "b")
       (is (= 4 (:recovered (recover-frequency d "a")))))))
 
 (deftest jump-from-non-zero-test
