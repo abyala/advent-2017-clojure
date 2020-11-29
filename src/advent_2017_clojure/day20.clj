@@ -40,3 +40,31 @@
                      (partial smallest-group :v)
                      (partial smallest-group :a))
                (map going-positive (parse-input input))))))
+
+(defn move-dimension [{:keys [:p :v :a] :as dimension}]
+  (-> dimension
+      (update :v + a)
+      (update :p + a v)))
+
+(defn move-particle [part]
+  (-> part
+      (update :x move-dimension)
+      (update :y move-dimension)
+      (update :z move-dimension)))
+
+(defn position-of [particle]
+  (mapv #(get-in particle [% :p]) [:x :y :z]))
+
+(defn remove-collisions [particles]
+  (merge (->> (group-by position-of particles)
+                    (keep (fn [[_ parts]]
+                            (when (= 1 (count parts))
+                              (first parts)))))))
+
+(defn part2 [input]
+  ; I think 10,000 iterations should suffice.
+  (->> (parse-input input)
+       (iterate (comp remove-collisions (partial map move-particle)))
+       (drop 10000)
+       first
+       count))

@@ -23,6 +23,11 @@ _I'm only starting this after returning from AoC 2016, since I didn't record my 
   since it did a lot of calculations, and that overloaded the lazy map.  Given the use case, there really was no need
   for lazy evaluation, and evaluating it didn't have any negative impacts. 
 
+* Day 20
+  * I did part 1 before moving to 2016, and I think I always regretted reformatting the inputs.
+  * That said, I just made an educated guess that 10,000 tests would be enough for the particles to have hit,
+  so it's not perfect but it got me the star.
+
 * Day 21
   * I had to do this a few times, because I couldn't decide if I wanted to represent the grid as one big string, or as
   sequences of strings. I eventually opted for the latter.
