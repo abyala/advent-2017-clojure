@@ -57,3 +57,13 @@ _I'm only starting this after returning from AoC 2016, since I didn't record my 
   I might extend this further; perhaps each value in the action-map can support an optional filter, such that
   `jnz` and `jgz` could both use a common function, but with an optional filter to decide if the branch should be taken.
   That could also work with some of the earlier channel work.
+  
+* Day 24
+  * The hardest part of this was figuring out the mix of `concat`, `cons`, and `merge` in `find-paths`.
+  If a path is defined as a vector of points, and a point is a 2-element vector, then the possible paths from a source
+  is a list of a vector of vectors.
+  * What also made this hard was making sure I got the intermediate bridges. So if I have a bridge `0/1--10/1` and I
+  add `9/10` to the end, the instructions said to keep both `0/1--10/1` and `0/1--10/1--9/10` in the list of possible
+  bridges. It's a simple `cons`, but again it was hard to get the grouping sizes right.  And then when all was said and
+  done, it was entirely unnecessary, since an intermediate bridge will neither be stronger than nor longer than an
+  extension. Oh well -- it was a learning experience! 
