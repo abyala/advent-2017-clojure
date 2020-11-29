@@ -27,8 +27,7 @@
                                           (other-side pin c))))))))
 
 (defn strength [path]
-  (->> (map (partial apply +) path)
-       (apply +)))
+  (->> path flatten (apply +)))
 
 (defn strongest-path [paths]
   (->> (map strength paths)
